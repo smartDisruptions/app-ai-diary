@@ -5,9 +5,10 @@ import React, { useState } from 'react';
 interface ChatInputProps {
   onSend: (content: string) => void;
   disabled?: boolean;
+  placeholder?: string;
 }
 
-export function ChatInput({ onSend, disabled = false }: ChatInputProps) {
+export function ChatInput({ onSend, disabled = false, placeholder = 'Type a message...' }: ChatInputProps) {
   const [value, setValue] = useState('');
 
   const handleSend = () => {
@@ -32,15 +33,15 @@ export function ChatInput({ onSend, disabled = false }: ChatInputProps) {
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={handleKeyDown}
         disabled={disabled}
-        placeholder="Type a message..."
-        className="flex-1 min-h-[44px] bg-[rgba(255,255,255,0.04)] border border-[rgba(196,154,108,0.12)] text-text-body rounded-3xl px-5 py-2.5 placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-copper/50 focus:border-copper transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+        placeholder={placeholder}
+        className="flex-1 min-w-0 min-h-[48px] bg-[rgba(244,230,204,0.05)] border border-[rgba(244,230,204,0.14)] text-cream text-[15px] rounded-3xl px-5 py-2.5 placeholder:text-[rgba(244,230,204,0.35)] focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
       />
       <button
         type="button"
         onClick={handleSend}
         disabled={disabled || !value.trim()}
         aria-label="Send message"
-        className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-copper to-copper-deep text-[#141416] flex items-center justify-center transition-opacity duration-200 hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+        className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-b from-[#f4c578] to-[#e19a3f] text-[#2a1709] flex items-center justify-center shadow-[0_8px_22px_-8px_rgba(242,181,94,0.6)] transition-opacity duration-200 disabled:opacity-40 disabled:shadow-none disabled:cursor-not-allowed cursor-pointer"
       >
         <svg
           width="18"

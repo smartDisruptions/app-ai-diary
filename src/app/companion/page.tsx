@@ -1,19 +1,24 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { useChat } from '@/hooks/useChat';
 import { getProfile } from '@/lib/storage/profile';
 import { MessageBubble } from '@/components/companion/MessageBubble';
 import { ChatInput } from '@/components/companion/ChatInput';
 import { TypingIndicator } from '@/components/companion/TypingIndicator';
 import { RapportLevel } from '@/components/companion/RapportLevel';
+import { EmberMark } from '@/components/stream/EmberMark';
+import { useCompanionName, useHasApiKey } from '@/hooks/useClientValues';
 import type { PersonalityProfile } from '@/types';
 
+/** Chat with the companion (Ember unless renamed). Always clearly an AI. */
 export default function CompanionPage() {
   const { messages, loading, error, sendMessage, clear } = useChat();
   const [profile, setProfile] = useState<PersonalityProfile | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const name = useCompanionName();
+  const aiOn = useHasApiKey();
 
   useEffect(() => {
     setProfile(getProfile());
@@ -25,73 +30,47 @@ export default function CompanionPage() {
 
   const handleRetry = () => {
     const lastUserMsg = [...messages].reverse().find((m) => m.role === 'user');
-    if (lastUserMsg) {
-      sendMessage(lastUserMsg.content);
-    }
+    if (lastUserMsg) sendMessage(lastUserMsg.content);
   };
 
   return (
-    <div className="flex flex-col h-[calc(100vh-5rem)] max-w-2xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border-card">
-        <div className="flex items-center gap-3">
-          {/* Avatar */}
-          <div className="w-[38px] h-[38px] rounded-full bg-gradient-to-br from-copper to-copper-deep flex items-center justify-center flex-shrink-0">
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#141416"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-            </svg>
-          </div>
-          <div className="flex flex-col">
-            <span className="text-text-heading text-base font-semibold leading-tight">
-              AI Companion
-            </span>
-            {profile && <RapportLevel entryCount={profile.entryCount} />}
+    <div className="mx-auto flex h-[100dvh] max-w-2xl flex-col">
+      <header className="flex items-center justify-between gap-3 border-b border-[var(--line)] px-5 pb-3 pt-[calc(16px+env(safe-area-inset-top,0px))] md:px-8 md:pt-8">
+        <div className="flex min-w-0 items-center gap-3">
+          <EmberMark size={40} blink={loading} />
+          <div className="min-w-0">
+            <h1 className="display truncate text-[28px] leading-none">{name}</h1>
+            <p className="mt-1 truncate text-[12px] text-[var(--cream-soft)]">
+              AI companion{profile ? ' · ' : ''}
+              {profile && <RapportLevel entryCount={profile.entryCount} />}
+            </p>
           </div>
         </div>
         {messages.length > 0 && (
           <button
             type="button"
             onClick={clear}
-            className="text-text-muted text-xs hover:text-copper transition-colors duration-200 cursor-pointer px-2 py-1"
+            className="min-h-[44px] px-2 text-[13px] text-[var(--cream-soft)] transition-colors duration-200 hover:text-gold cursor-pointer"
           >
             Clear
           </button>
         )}
-      </div>
+      </header>
 
-      {/* Messages area */}
-      <div
-        ref={scrollContainerRef}
-        className="flex-1 overflow-y-auto px-4 py-4 space-y-3"
-      >
+      <div className="flex-1 space-y-3 overflow-y-auto px-5 py-5 md:px-8">
         {messages.length === 0 && !loading && (
-          <div className="flex flex-col items-center justify-center h-full text-center px-4">
-            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-copper to-copper-deep flex items-center justify-center mb-4 opacity-60">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#141416"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-              </svg>
-            </div>
-            <p className="text-text-muted text-sm">
-              Start a conversation with your AI companion
+          <div className="flex h-full flex-col items-center justify-center px-4 text-center">
+            <EmberMark size={72} blink />
+            <h2 className="display mt-4 text-[32px]">Talk to {name}</h2>
+            <p className="mt-2 max-w-sm text-[14.5px] leading-relaxed text-[var(--cream-soft)]">
+              {name} is an AI. It knows what you’ve shared in your entries and helps you think things through. Mention a
+              task and it lands in your to-dos.
             </p>
+            {!aiOn && (
+              <Link href="/settings" className="mt-4 text-[14px] font-semibold text-gold underline underline-offset-4">
+                Add an AI key in Settings to start
+              </Link>
+            )}
           </div>
         )}
 
@@ -102,14 +81,14 @@ export default function CompanionPage() {
         {loading && <TypingIndicator />}
 
         {error && (
-          <div className="bg-[rgba(239,68,68,0.08)] border border-[rgba(239,68,68,0.2)] rounded-2xl p-4">
-            <p className="text-red-400 text-sm">{error}</p>
+          <div className="rounded-2xl border border-[rgba(255,140,120,0.35)] bg-[rgba(255,140,120,0.08)] p-4" role="alert">
+            <p className="text-[14px] text-[#ffb4a6]">{error}</p>
             <button
               type="button"
               onClick={handleRetry}
-              className="mt-2 text-red-400 text-sm font-medium hover:text-red-300 transition-colors duration-200 cursor-pointer"
+              className="mt-2 min-h-[44px] text-[14px] font-semibold text-[#ffb4a6] cursor-pointer"
             >
-              Retry
+              Try again
             </button>
           </div>
         )}
@@ -117,9 +96,8 @@ export default function CompanionPage() {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input bar */}
-      <div className="px-4 py-3 border-t border-border-card pb-safe">
-        <ChatInput onSend={sendMessage} disabled={loading} />
+      <div className="border-t border-[var(--line)] px-5 pt-3 pb-[calc(86px+env(safe-area-inset-bottom,0px))] md:px-8 md:pb-6">
+        <ChatInput onSend={sendMessage} disabled={loading} placeholder={`Write to ${name}...`} />
       </div>
     </div>
   );

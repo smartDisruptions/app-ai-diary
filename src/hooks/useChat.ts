@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { nanoid } from 'nanoid';
 import type { Message } from '@/types';
 import { getMessages, addMessage, clearMessages } from '@/lib/storage/companion';
@@ -25,7 +25,12 @@ function extractTodos(response: string): { cleanResponse: string; todos: string[
 }
 
 export function useChat() {
-  const [messages, setMessages] = useState<Message[]>(getMessages);
+  // Loaded after mount: the page is prerendered, and reading storage during the
+  // first render made the server and browser disagree (a hydration error).
+  const [messages, setMessages] = useState<Message[]>([]);
+  useEffect(() => {
+    setMessages(getMessages());
+  }, []);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

@@ -33,6 +33,7 @@ export const personalityProfileSchema = z.object({
   writingStyle: writingStyleSchema,
   lastUpdated: z.string(),
   entryCount: z.number().int().min(0),
+  observation: z.string().optional(),
 });
 
 export const entrySchema = z.object({
@@ -53,4 +54,5 @@ export const settingsSchema = z.object({
   apiKey: z.string(),
   model: z.string(),
   userName: z.string(),
+  companionName: z.string().optional(),
 });

@@ -14,9 +14,8 @@ function getRapportLabel(count: number): string {
 
 export function RapportLevel({ entryCount }: RapportLevelProps) {
   return (
-    <span className="text-text-muted text-xs">
-      {getRapportLabel(entryCount)} &middot; {entryCount}{' '}
-      {entryCount === 1 ? 'entry' : 'entries'}
+    <span className="text-[12px] text-[var(--cream-soft)]">
+      {getRapportLabel(entryCount)} &middot; {entryCount} {entryCount === 1 ? 'entry' : 'entries'}
     </span>
   );
 }

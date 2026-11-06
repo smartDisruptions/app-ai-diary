@@ -14,7 +14,7 @@ const mockProfile: PersonalityProfile = {
   entryCount: 10,
 };
 
-const mockSettings: Settings = { apiKey: 'sk-test', model: 'test-model', userName: 'Josh' };
+const mockSettings: Settings = { apiKey: 'sk-test', model: 'test-model', userName: 'Josh', companionName: 'Ember' };
 
 vi.mock('@/lib/api/openrouter', () => ({
   chatCompletion: vi.fn(),

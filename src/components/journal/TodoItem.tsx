@@ -19,12 +19,12 @@ export function TodoItem({ todo, onToggle }: TodoItemProps) {
     <button
       type="button"
       onClick={() => onToggle(todo.id)}
-      className="flex items-start gap-3 w-full text-left py-2 cursor-pointer"
+      className="flex items-start gap-3 w-full text-left py-2.5 min-h-[44px] cursor-pointer"
     >
       {/* Checkbox */}
       <div className="mt-0.5 flex-shrink-0">
         {todo.done ? (
-          <div className="w-5 h-5 rounded-md bg-gradient-to-br from-copper to-copper-deep flex items-center justify-center">
+          <div className="w-5 h-5 rounded-md bg-gradient-to-b from-[#f4c578] to-[#e19a3f] flex items-center justify-center">
             <svg
               width="12"
               height="12"
@@ -34,7 +34,7 @@ export function TodoItem({ todo, onToggle }: TodoItemProps) {
             >
               <path
                 d="M2.5 6L5 8.5L9.5 3.5"
-                stroke="#141416"
+                stroke="#2a1709"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -44,7 +44,7 @@ export function TodoItem({ todo, onToggle }: TodoItemProps) {
         ) : (
           <div
             className="w-5 h-5 rounded-md"
-            style={{ border: '1.5px solid rgba(196, 154, 108, 0.3)' }}
+            style={{ border: '1.5px solid rgba(244, 230, 204, 0.35)' }}
           />
         )}
       </div>
@@ -54,13 +54,13 @@ export function TodoItem({ todo, onToggle }: TodoItemProps) {
         <p
           className={`text-sm leading-snug ${
             todo.done
-              ? 'line-through text-text-muted'
-              : 'text-text-body'
+              ? 'line-through text-[var(--cream-faint)]'
+              : 'text-cream'
           }`}
         >
           {todo.text}
         </p>
-        <p className="text-xs text-text-muted mt-0.5">
+        <p className="text-xs text-[var(--cream-faint)] mt-0.5">
           {todo.source} &middot; {dateLabel}
         </p>
       </div>

@@ -22,16 +22,16 @@ export function MessageBubble({ message }: MessageBubbleProps) {
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>
       <div
-        className={`max-w-[80%] px-4 py-3 ${
+        className={`max-w-[82%] px-4 py-3 ${
           isUser
-            ? 'bg-[rgba(196,154,108,0.12)] border border-[rgba(196,154,108,0.2)] rounded-[18px] rounded-br-[4px]'
-            : 'bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.06)] rounded-[18px] rounded-bl-[4px]'
+            ? 'bg-[rgba(242,181,94,0.14)] border border-[rgba(242,181,94,0.28)] rounded-[20px] rounded-br-[6px]'
+            : 'bg-[rgba(244,230,204,0.05)] border border-[rgba(244,230,204,0.1)] rounded-[20px] rounded-bl-[6px]'
         }`}
       >
-        <p className="text-text-body text-sm whitespace-pre-wrap leading-relaxed">
+        <p className="text-cream text-[15px] whitespace-pre-wrap leading-relaxed">
           {message.content}
         </p>
-        <p className="text-text-muted mt-1.5" style={{ fontSize: '10px' }}>
+        <p className="text-[var(--cream-faint)] mt-1.5" style={{ fontSize: '11px' }}>
           {formatTimestamp(message.timestamp)}
         </p>
       </div>

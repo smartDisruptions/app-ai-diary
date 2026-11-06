@@ -23,7 +23,7 @@ const mockProfile: PersonalityProfile = {
   entryCount: 10,
 };
 
-const settings = { apiKey: 'sk-test', model: 'test-model', userName: 'Josh' };
+const settings = { apiKey: 'sk-test', model: 'test-model', userName: 'Josh', companionName: 'Ember' };
 
 beforeEach(() => {
   window.localStorage.clear();

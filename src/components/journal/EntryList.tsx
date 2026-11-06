@@ -2,29 +2,32 @@
 
 import React from 'react';
 import { EntryCard } from './EntryCard';
+import type { StreamFirefly } from '@/lib/stream';
 import type { Entry } from '@/types';
 
 interface EntryListProps {
   entries: Entry[];
   onTapEntry: (entry: Entry) => void;
+  moods?: Record<string, StreamFirefly>;
 }
 
-export function EntryList({ entries, onTapEntry }: EntryListProps) {
+export function EntryList({ entries, onTapEntry, moods }: EntryListProps) {
   if (entries.length === 0) {
-    return (
-      <p className="text-text-muted text-sm text-center py-8">
-        No entries yet. Start writing!
-      </p>
-    );
+    return <p className="py-8 text-center text-[14px] text-[var(--cream-soft)]">No entries yet. Start writing!</p>;
   }
 
-  // Sort newest first
-  const sorted = [...entries].sort((a, b) => b.date.localeCompare(a.date));
+  const sorted = [...entries].sort((a, b) => (b.date + b.createdAt).localeCompare(a.date + a.createdAt));
 
   return (
-    <div className="space-y-3">
+    <div className="grid gap-2.5">
       {sorted.map((entry) => (
-        <EntryCard key={entry.id} entry={entry} onTap={onTapEntry} />
+        <EntryCard
+          key={entry.id}
+          entry={entry}
+          mood={moods?.[entry.id]?.mood ?? undefined}
+          tone={moods?.[entry.id]?.tone}
+          onTap={onTapEntry}
+        />
       ))}
     </div>
   );

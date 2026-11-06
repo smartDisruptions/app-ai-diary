@@ -9,9 +9,9 @@ interface ToastProps {
 }
 
 const typeStyles = {
-  success: 'border-green-500/40 bg-green-500/10 text-green-300',
-  error: 'border-red-500/40 bg-red-500/10 text-red-300',
-  info: 'border-copper/40 bg-copper/10 text-copper',
+  success: 'border-[rgba(242,181,94,0.4)] bg-[rgba(30,24,20,0.92)] text-[#f7d6a3]',
+  error: 'border-[rgba(255,140,120,0.45)] bg-[rgba(40,20,20,0.92)] text-[#ffb4a6]',
+  info: 'border-[rgba(244,230,204,0.25)] bg-[rgba(24,20,28,0.92)] text-cream',
 };
 
 export function Toast({ message, type, onClose }: ToastProps) {
@@ -21,7 +21,7 @@ export function Toast({ message, type, onClose }: ToastProps) {
   }, [onClose]);
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed z-50 left-4 right-4 md:left-auto md:right-6 bottom-[calc(84px+env(safe-area-inset-bottom,0px))] md:bottom-6 flex justify-center md:block">
       <div
         className={`border rounded-xl px-5 py-3 shadow-lg backdrop-blur-sm ${typeStyles[type]}`}
         role="alert"

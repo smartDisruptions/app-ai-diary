@@ -8,6 +8,8 @@ import type { BigFive, WritingStyle, EmotionData } from '@/types';
 // Mock getProfile for the page test
 vi.mock('@/lib/storage/profile', () => ({
   getProfile: vi.fn(() => null),
+  PROFILE_KEY: 'diary-profile',
+  PROFILE_EVENT: 'diary-profile-changed',
 }));
 
 vi.mock('@/lib/storage/entries', () => ({
@@ -26,8 +28,10 @@ describe('ProfilePage empty state', () => {
     const { default: ProfilePage } = await import('@/app/profile/page');
     render(<ProfilePage />);
 
-    expect(screen.getByText('No Insights Yet')).toBeInTheDocument();
-    expect(screen.getByText('Add journal entries to build your profile')).toBeInTheDocument();
+    // An honest empty state, never the made-up sample profile the page once showed.
+    expect(screen.getByText('No patterns yet')).toBeInTheDocument();
+    expect(screen.getByText('Your patterns show up here once you’ve written a few entries.')).toBeInTheDocument();
+    expect(screen.queryByText('Openness')).not.toBeInTheDocument();
   });
 });
 
@@ -42,11 +46,14 @@ describe('BigFiveChart', () => {
 
   it('renders all 5 traits', () => {
     render(<BigFiveChart bigFive={bigFive} />);
-    expect(screen.getByText('Openness')).toBeInTheDocument();
-    expect(screen.getByText('Conscientiousness')).toBeInTheDocument();
-    expect(screen.getByText('Extraversion')).toBeInTheDocument();
-    expect(screen.getByText('Agreeableness')).toBeInTheDocument();
-    expect(screen.getByText('Neuroticism')).toBeInTheDocument();
+    // Friendly names on the jars, never a grade-sounding label like "Neuroticism".
+    for (const name of ['Curious', 'Organized', 'Outgoing', 'Warm', 'Sensitive']) {
+      expect(screen.getByText(name)).toBeInTheDocument();
+    }
+    expect(screen.queryByText('Neuroticism')).not.toBeInTheDocument();
+    // The research names stay available to screen readers.
+    expect(screen.getByRole('listitem', { name: /Openness/ })).toBeInTheDocument();
+    expect(screen.getByRole('listitem', { name: /Conscientiousness/ })).toBeInTheDocument();
   });
 
   it('renders scores for each trait', () => {

@@ -39,6 +39,8 @@ export type PersonalityProfile = {
   writingStyle: WritingStyle;
   lastUpdated: string;
   entryCount: number;
+  /** One sentence that completes "Ember noticed …". Optional: older profiles have none. */
+  observation?: string;
 };
 
 export type Message = {
@@ -51,6 +53,8 @@ export type Settings = {
   apiKey: string;
   model: string;
   userName: string;
+  /** What the AI companion is called. Defaults to Ember; the person can rename it. */
+  companionName: string;
 };
 
 export type Todo = {

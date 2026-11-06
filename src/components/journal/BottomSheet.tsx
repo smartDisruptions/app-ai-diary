@@ -43,14 +43,17 @@ export function BottomSheet({ isOpen, onClose, children }: BottomSheetProps) {
 
       {/* Sheet */}
       <div
-        className="fixed inset-x-0 bottom-0 z-50 transition-transform duration-300 ease-out"
+        className="fixed inset-x-0 md:left-60 bottom-0 z-50 transition-transform duration-300 ease-out"
+        role="dialog"
+        aria-modal="true"
+        aria-hidden={!isOpen}
         style={{
           transform: isOpen ? 'translateY(0)' : 'translateY(100%)',
           maxHeight: '70vh',
           borderTopLeftRadius: 24,
           borderTopRightRadius: 24,
-          background: '#1a1a1e',
-          border: '1px solid rgba(196,154,108,0.1)',
+          background: 'linear-gradient(180deg, #1b1620, #120f14)',
+          border: '1px solid var(--line)',
           borderBottom: 'none',
         }}
       >
@@ -61,14 +64,14 @@ export function BottomSheet({ isOpen, onClose, children }: BottomSheetProps) {
             style={{
               width: 36,
               height: 4,
-              background: 'rgba(196,154,108,0.25)',
+              background: 'rgba(244,230,204,0.22)',
             }}
           />
         </div>
 
         {/* Content */}
         <div
-          className="overflow-y-auto px-6 pb-8"
+          className="overflow-y-auto px-6 pb-[calc(32px+env(safe-area-inset-bottom,0px))]"
           style={{ maxHeight: 'calc(70vh - 32px)' }}
         >
           {children}

@@ -30,7 +30,7 @@ describe('EntryEditor', () => {
   it('renders textarea and save button when open', () => {
     render(<EntryEditor isOpen={true} onClose={vi.fn()} onSave={vi.fn()} />);
     expect(screen.getByPlaceholderText('Write about your day...')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Add to the stream' })).toBeInTheDocument();
   });
 
   it('renders nothing when closed', () => {
@@ -45,7 +45,7 @@ describe('EntryEditor', () => {
 
     const textarea = screen.getByPlaceholderText('Write about your day...');
     await user.type(textarea, 'Hello world');
-    await user.click(screen.getByRole('button', { name: 'Save' }));
+    await user.click(screen.getByRole('button', { name: 'Add to the stream' }));
 
     expect(onSave).toHaveBeenCalledWith('Hello world', '2026-03-29');
   });
@@ -56,7 +56,7 @@ describe('EntryEditor', () => {
 
     const textarea = screen.getByPlaceholderText('Write about your day...');
     await user.type(textarea, 'Some text');
-    await user.click(screen.getByRole('button', { name: 'Save' }));
+    await user.click(screen.getByRole('button', { name: 'Add to the stream' }));
 
     expect(textarea).toHaveValue('');
   });

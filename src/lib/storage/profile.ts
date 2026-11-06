@@ -1,6 +1,10 @@
 import type { PersonalityProfile } from '@/types';
 
-const STORAGE_KEY = 'diary-profile';
+export const PROFILE_KEY = 'diary-profile';
+const STORAGE_KEY = PROFILE_KEY;
+
+/** Fired after the AI saves a new profile, so open screens update on their own. */
+export const PROFILE_EVENT = 'diary-profile-changed';
 
 export function getProfile(): PersonalityProfile | null {
   try {
@@ -21,4 +25,9 @@ export function saveProfile(profile: PersonalityProfile): void {
     },
   };
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(pruned));
+  try {
+    window.dispatchEvent(new Event(PROFILE_EVENT));
+  } catch {
+    /* no window events: screens pick it up on next load */
+  }
 }

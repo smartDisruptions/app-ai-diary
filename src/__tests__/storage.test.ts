@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { getEntries, saveEntry, deleteEntry, exportEntriesJSON } from '@/lib/storage/entries';
 import { getProfile, saveProfile } from '@/lib/storage/profile';
 import { getMessages, addMessage, clearMessages } from '@/lib/storage/companion';
-import { getSettings, saveSettings } from '@/lib/storage/settings';
+import { getSettings, saveSettings, companionNameOf } from '@/lib/storage/settings';
 import { getStorageUsage, isNearQuota } from '@/lib/storage/quota';
 import type { Entry, PersonalityProfile, Message, Settings } from '@/types';
 
@@ -204,12 +204,26 @@ describe('settings', () => {
       apiKey: 'sk-test-123',
       model: 'gpt-4',
       userName: 'Alice',
+      companionName: 'Lumen',
     };
     saveSettings(settings);
     const loaded = getSettings();
     expect(loaded.apiKey).toBe('sk-test-123');
     expect(loaded.model).toBe('gpt-4');
     expect(loaded.userName).toBe('Alice');
+    expect(loaded.companionName).toBe('Lumen');
+  });
+
+  it('names the companion Ember until it is renamed', () => {
+    expect(getSettings().companionName).toBe('Ember');
+    window.localStorage.setItem('diary-settings', JSON.stringify({ apiKey: 'k', model: 'm', userName: 'A' }));
+    expect(getSettings().companionName).toBe('Ember');
+  });
+
+  it('never shows a blank companion name', () => {
+    expect(companionNameOf({ companionName: '   ' })).toBe('Ember');
+    expect(companionNameOf({ companionName: ' Wren ' })).toBe('Wren');
+    expect(companionNameOf(null)).toBe('Ember');
   });
 
   it('merges partial stored data with defaults', () => {

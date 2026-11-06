@@ -11,9 +11,9 @@ interface BadgeProps {
 export function Badge({ variant = 'solid', children, className = '' }: BadgeProps) {
   const variants = {
     solid:
-      'bg-gradient-to-r from-copper to-copper-deep text-bg-primary rounded-full px-3 py-1 text-xs uppercase tracking-wider font-semibold',
+      'bg-gradient-to-b from-[#f4c578] to-[#e19a3f] text-[#2a1709] rounded-full px-3 py-1 text-xs font-semibold',
     outline:
-      'bg-transparent border border-copper text-copper rounded-full px-3 py-1 text-xs uppercase tracking-wider font-semibold',
+      'bg-[rgba(242,181,94,0.1)] border border-[rgba(242,181,94,0.35)] text-[#f7d6a3] rounded-full px-3 py-1 text-xs font-semibold',
   };
 
   return (

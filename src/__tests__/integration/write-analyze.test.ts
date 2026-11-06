@@ -49,7 +49,7 @@ describe('write → analyze → profile update flow', () => {
 
     // Simulate analysis
     mockedChat.mockResolvedValueOnce(JSON.stringify(mockProfileResponse));
-    const settings = { apiKey: 'sk-test', model: 'test-model', userName: 'Josh' };
+    const settings = { apiKey: 'sk-test', model: 'test-model', userName: 'Josh', companionName: 'Ember' };
     const profile = await analyzeEntry(null, entry, settings);
 
     // Save profile
@@ -89,7 +89,7 @@ describe('write → analyze → profile update flow', () => {
     };
 
     mockedChat.mockResolvedValueOnce(JSON.stringify(updatedProfile));
-    const settings = { apiKey: 'sk-test', model: 'test-model', userName: 'Josh' };
+    const settings = { apiKey: 'sk-test', model: 'test-model', userName: 'Josh', companionName: 'Ember' };
     const result = await analyzeEntry(getProfile(), newEntry, settings);
     saveProfile(result);
 

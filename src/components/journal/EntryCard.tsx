@@ -1,45 +1,43 @@
 'use client';
 
 import React from 'react';
-import { Badge } from '@/components/ui/Badge';
 import { formatRelativeDate } from '@/lib/utils/date';
+import { paintFor } from '@/components/stream/StreamDefs';
+import type { Tone } from '@/lib/stream';
 import type { Entry } from '@/types';
 
 interface EntryCardProps {
   entry: Entry;
   mood?: string;
+  tone?: Tone;
   onTap: (entry: Entry) => void;
 }
 
-export function EntryCard({ entry, mood, onTap }: EntryCardProps) {
-  const preview =
-    entry.content.length > 100
-      ? entry.content.slice(0, 100) + '...'
-      : entry.content;
+/** One entry in the list: its firefly, the day, the feeling, and the opening lines. */
+export function EntryCard({ entry, mood, tone = 'unread', onTap }: EntryCardProps) {
+  const preview = entry.content.length > 100 ? entry.content.slice(0, 100) + '...' : entry.content;
 
   return (
     <button
       type="button"
       onClick={() => onTap(entry)}
-      className="w-full text-left px-4 py-3 rounded-xl transition-colors duration-200 cursor-pointer"
-      style={{
-        background: 'rgba(255,255,255,0.03)',
-        border: '1px solid rgba(196,154,108,0.1)',
-      }}
+      className="panel flex w-full items-start gap-3 px-4 py-3.5 text-left transition-colors duration-200 hover:bg-[rgba(244,230,204,0.08)] cursor-pointer"
     >
-      <div className="flex items-center justify-between mb-1">
-        <span className="text-text-muted text-xs">
-          {formatRelativeDate(entry.date)}
+      <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" className="mt-0.5 flex-none">
+        <circle cx="12" cy="12" r="11" fill={paintFor(tone)} />
+        <circle cx="12" cy="12" r="2.4" fill="#fff7c2" />
+      </svg>
+      <span className="min-w-0 flex-1">
+        <span className="mb-1 flex items-baseline justify-between gap-3">
+          <span className="text-[12px] font-semibold text-[var(--cream-soft)]">{formatRelativeDate(entry.date)}</span>
+          {mood && (
+            <span className={`font-serif text-[15px] italic ${tone === 'restless' ? 'text-calm-blue' : 'text-[#f7d6a3]'}`}>
+              {mood}
+            </span>
+          )}
         </span>
-        {mood && (
-          <Badge variant="outline" className="!text-[10px] !px-2 !py-0.5">
-            {mood}
-          </Badge>
-        )}
-      </div>
-      <p className="text-text-body text-sm leading-snug line-clamp-2">
-        {preview}
-      </p>
+        <span className="block text-[14px] leading-snug text-cream line-clamp-2">{preview}</span>
+      </span>
     </button>
   );
 }

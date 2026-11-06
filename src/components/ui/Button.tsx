@@ -19,11 +19,11 @@ export function Button({
   onClick,
   type = 'button',
 }: ButtonProps) {
-  const base = 'rounded-xl font-semibold transition-opacity duration-200 cursor-pointer min-h-[44px]';
+  const base = 'rounded-xl font-semibold transition-[opacity,background-color,box-shadow] duration-200 cursor-pointer min-h-[44px]';
 
   const variants = {
-    primary: `bg-gradient-to-r from-[#c49a6c] to-[#a07850] text-[#141416] px-5 py-2.5 hover:opacity-80 ${base}`,
-    ghost: `bg-transparent text-[#c49a6c] px-5 py-2.5 hover:bg-[rgba(196,154,108,0.1)] ${base}`,
+    primary: `bg-gradient-to-b from-[#f4c578] to-[#e19a3f] text-[#2a1709] px-5 py-2.5 shadow-[0_10px_28px_-12px_rgba(242,181,94,0.6)] hover:shadow-[0_12px_32px_-10px_rgba(242,181,94,0.75)] ${base}`,
+    ghost: `bg-[rgba(244,230,204,0.04)] border border-[rgba(244,230,204,0.14)] text-cream px-5 py-2.5 hover:bg-[rgba(244,230,204,0.08)] ${base}`,
   };
 
   return (

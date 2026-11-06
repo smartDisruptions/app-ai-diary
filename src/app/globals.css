@@ -1,15 +1,55 @@
 @import "tailwindcss";
 
+/*
+  AI Diary: The Stream (November 2026).
+
+  A night room with a warm glow. Every entry is a firefly on a riverbank, gold
+  when the feeling leans calm, soft blue when it leans heavy, cream until the
+  AI has read it. Mood shows in the water under each day, never as up or down.
+
+  One palette, one dark look. The old token names (copper, text-body, …) are
+  kept and pointed at the new colours so smaller pieces follow automatically.
+*/
 :root {
-  --bg-primary: #141416;
-  --bg-secondary: #1a1a1e;
-  --bg-card: rgba(255, 255, 255, 0.03);
-  --border-card: rgba(196, 154, 108, 0.1);
-  --copper: #c49a6c;
-  --copper-deep: #a07850;
-  --text-body: #d4c4b0;
-  --text-heading: #c49a6c;
-  --text-muted: rgba(200, 184, 164, 0.4);
+  color-scheme: dark;
+
+  /* the room */
+  --room: #120f14;
+  --room-deep: #0e0c10;
+  --room-raise: #19141c;
+  --water-top: #1c1a30;
+  --water-deep: #0d0b12;
+
+  /* light */
+  --gold: #f2b55e;
+  --gold-deep: #e19a3f;
+  --gold-hi: #ffd28a;
+  --spark: #fff7c2;
+  --calm-blue: #c3cbf2;
+  --dim-blue: #8e9be0;
+
+  /* ink */
+  --cream: #f4e6cc;
+  --cream-soft: rgba(244, 230, 204, 0.62);
+  --cream-faint: rgba(244, 230, 204, 0.38);
+  --line: rgba(244, 230, 204, 0.12);
+  --panel: rgba(244, 230, 204, 0.05);
+  --wood: #6b4a2e;
+  --ink-on-gold: #2a1709;
+
+  /* the old names, now pointing at the stream palette */
+  --bg-primary: var(--room);
+  --bg-secondary: var(--room-deep);
+  --bg-card: var(--panel);
+  --border-card: var(--line);
+  --copper: var(--gold);
+  --copper-deep: var(--gold-deep);
+  --text-body: var(--cream);
+  --text-heading: var(--cream);
+  --text-muted: var(--cream-faint);
+
+  --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Figtree Variable', 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
 @theme inline {
@@ -22,39 +62,124 @@
   --color-text-body: var(--text-body);
   --color-text-heading: var(--text-heading);
   --color-text-muted: var(--text-muted);
+  --color-gold: var(--gold);
+  --color-cream: var(--cream);
+  --color-calm-blue: var(--calm-blue);
+  --font-serif: var(--font-serif);
+  --font-sans: var(--font-sans);
+}
+
+html {
+  background: var(--room);
 }
 
 body {
-  background: linear-gradient(180deg, var(--bg-primary), var(--bg-secondary));
-  color: var(--text-body);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background:
+    radial-gradient(90% 46% at 50% 0%, rgba(242, 181, 94, 0.13), rgba(242, 181, 94, 0) 70%),
+    radial-gradient(rgba(244, 230, 204, 0.03) 1px, transparent 1px) 0 0 / 5px 5px,
+    linear-gradient(180deg, var(--room-raise), var(--room-deep));
+  background-attachment: fixed;
+  color: var(--cream);
+  font-family: var(--font-sans);
   min-height: 100vh;
 }
 
 ::selection {
-  background: rgba(196, 154, 108, 0.3);
+  background: rgba(242, 181, 94, 0.35);
   color: #fff;
 }
 
-::-webkit-scrollbar {
-  width: 6px;
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(244, 230, 204, 0.16); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(244, 230, 204, 0.3); }
+
+/* In the base layer, so a component can opt out (the writing page does). */
+@layer base {
+  *:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
+/* ── type ── */
+.display {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+}
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--cream-soft);
+}
+.section-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cream-soft);
 }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(196, 154, 108, 0.2);
-  border-radius: 3px;
+/* ── surfaces ── */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+}
+.glow-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 56px;
+  padding: 12px 18px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #f4c578, var(--gold-deep));
+  color: var(--ink-on-gold);
+  font-weight: 700;
+  text-align: left;
+  box-shadow: 0 12px 34px -10px rgba(242, 181, 94, 0.55);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+  cursor: pointer;
+}
+.glow-button:hover { box-shadow: 0 14px 40px -8px rgba(242, 181, 94, 0.7); }
+.glow-button:active { transform: scale(0.985); }
+.glow-button small { display: block; font-weight: 500; font-size: 12px; opacity: 0.72; }
+.tag {
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(242, 181, 94, 0.12);
+  border: 1px solid rgba(242, 181, 94, 0.32);
+  color: #f7d6a3;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(196, 154, 108, 0.4);
+/* ── motion ── */
+@media (prefers-reduced-motion: no-preference) {
+  .firefly-blink { animation: firefly-blink 3.4s ease-in-out infinite; }
+  .ripple-drift { animation: ripple-drift 5s ease-in-out infinite alternate; }
+  .rise-in { animation: rise-in 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+}
+@keyframes firefly-blink {
+  0%, 100% { opacity: 0.55; }
+  45%, 60% { opacity: 1; }
+}
+@keyframes ripple-drift {
+  to { translate: 2px 0; }
+}
+@keyframes rise-in {
+  from { opacity: 0; translate: 0 8px; }
 }
 
-*:focus-visible {
-  outline: 2px solid var(--copper);
-  outline-offset: 2px;
-  border-radius: 4px;
+/* room for the floating tab bar and the phone's home indicator */
+.pb-tabbar {
+  padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+}
+@media (min-width: 768px) {
+  .pb-tabbar { padding-bottom: 48px; }
 }

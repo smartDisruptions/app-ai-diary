@@ -5,14 +5,14 @@ import React from 'react';
 export function TypingIndicator() {
   return (
     <div className="flex justify-start">
-      <div className="bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.06)] rounded-[18px] rounded-bl-[4px] px-4 py-3 flex items-center gap-1.5">
-        <span className="typing-dot h-2 w-2 rounded-full bg-copper" />
+      <div className="bg-[rgba(244,230,204,0.05)] border border-[rgba(244,230,204,0.1)] rounded-[18px] rounded-bl-[4px] px-4 py-3 flex items-center gap-1.5" aria-label="Writing a reply">
+        <span className="typing-dot h-2 w-2 rounded-full bg-gold" />
         <span
-          className="typing-dot h-2 w-2 rounded-full bg-copper"
+          className="typing-dot h-2 w-2 rounded-full bg-gold"
           style={{ animationDelay: '150ms' }}
         />
         <span
-          className="typing-dot h-2 w-2 rounded-full bg-copper"
+          className="typing-dot h-2 w-2 rounded-full bg-gold"
           style={{ animationDelay: '300ms' }}
         />
       </div>

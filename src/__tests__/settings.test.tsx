@@ -17,6 +17,7 @@ vi.mock('@/lib/storage/settings', () => ({
     userName: 'Alice',
   })),
   saveSettings: vi.fn(),
+  DEFAULT_COMPANION_NAME: 'Ember',
 }));
 
 vi.mock('@/lib/storage/entries', () => ({
@@ -39,7 +40,7 @@ describe('SettingsPage', () => {
 
     expect(screen.getByLabelText(/api key/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/model/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/user name/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/your name/i)).toBeInTheDocument();
   });
 
   it('loads existing settings from localStorage', () => {
@@ -47,7 +48,7 @@ describe('SettingsPage', () => {
 
     expect(screen.getByLabelText(/api key/i)).toHaveValue('test-key-123');
     expect(screen.getByLabelText(/model/i)).toHaveValue('anthropic/claude-sonnet-4');
-    expect(screen.getByLabelText(/user name/i)).toHaveValue('Alice');
+    expect(screen.getByLabelText(/your name/i)).toHaveValue('Alice');
   });
 
   it('saves settings on button click', async () => {
@@ -61,8 +62,26 @@ describe('SettingsPage', () => {
       apiKey: 'test-key-123',
       model: 'anthropic/claude-sonnet-4',
       userName: 'Alice',
+      companionName: 'Ember',
     });
     expect(mockShowToast).toHaveBeenCalledWith('Settings saved successfully', 'success');
+  });
+
+  it('lets the companion be renamed, and never saves a blank name', async () => {
+    const user = userEvent.setup();
+    render(<SettingsPage />);
+
+    const nameInput = screen.getByLabelText(/companion name/i);
+    expect(nameInput).toHaveValue('Ember');
+
+    await user.clear(nameInput);
+    await user.type(nameInput, 'Wren');
+    await user.click(screen.getByRole('button', { name: /save settings/i }));
+    expect(saveSettings).toHaveBeenLastCalledWith(expect.objectContaining({ companionName: 'Wren' }));
+
+    await user.clear(nameInput);
+    await user.click(screen.getByRole('button', { name: /save settings/i }));
+    expect(saveSettings).toHaveBeenLastCalledWith(expect.objectContaining({ companionName: 'Ember' }));
   });
 
   it('has an export button', () => {

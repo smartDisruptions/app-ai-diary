@@ -22,14 +22,15 @@ describe('Button', () => {
     render(<Button>Click me</Button>);
     const btn = screen.getByRole('button', { name: 'Click me' });
     expect(btn).toBeInTheDocument();
-    expect(btn.className).toContain('from-[#c49a6c]');
+    expect(btn.className).toContain('from-[#f4c578]');
   });
 
   it('renders ghost variant', () => {
     render(<Button variant="ghost">Ghost</Button>);
     const btn = screen.getByRole('button', { name: 'Ghost' });
     expect(btn).toBeInTheDocument();
-    expect(btn.className).toContain('bg-transparent');
+    expect(btn.className).toContain('text-cream');
+    expect(btn.className).not.toContain('from-[#f4c578]');
   });
 
   it('can be disabled', () => {
@@ -43,7 +44,7 @@ describe('Badge', () => {
     render(<Badge>New</Badge>);
     const badge = screen.getByText('New');
     expect(badge).toBeInTheDocument();
-    expect(badge.className).toContain('from-copper');
+    expect(badge.className).toContain('from-[#f4c578]');
   });
 
   it('renders outline variant', () => {
@@ -51,7 +52,7 @@ describe('Badge', () => {
     const badge = screen.getByText('Draft');
     expect(badge).toBeInTheDocument();
     expect(badge.className).toContain('border');
-    expect(badge.className).toContain('border-copper');
+    expect(badge.className).not.toContain('from-[#f4c578]');
   });
 });
 

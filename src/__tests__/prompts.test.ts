@@ -22,7 +22,7 @@ const mockEntry: Entry = {
   updatedAt: '2026-03-30T10:00:00Z',
 };
 
-const mockSettings: Settings = { apiKey: 'sk-test', model: 'test', userName: 'Josh' };
+const mockSettings: Settings = { apiKey: 'sk-test', model: 'test', userName: 'Josh', companionName: 'Ember' };
 
 describe('buildAnalysisPrompt', () => {
   it('builds incremental prompt with existing profile', () => {

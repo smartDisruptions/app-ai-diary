@@ -1,4 +1,13 @@
 import type { PersonalityProfile, Entry, Settings } from '@/types';
+import { companionNameOf } from '@/lib/storage/settings';
+
+/**
+ * How moods and observations are worded. The app shows them as written, so
+ * they follow the app's rule: name the feeling, never grade the day.
+ */
+const MOOD_AND_OBSERVATION_RULES = `Mood words: each moodHistory "mood" is one lowercase word naming the feeling in the entry (for example: proud, drained, frustrated, content, restless). Never use judging words like "bad", "low", "dark" or "down".
+
+Observation: one short sentence (at most 25 words) about a pattern across the recent entries, written to complete the phrase "Your companion noticed …" and starting in lowercase, for example "late coffee came before both restless nights this week." Be warm and specific, describe rather than judge, and never diagnose. Use an empty string if there is no clear pattern yet.`;
 
 export function buildAnalysisPrompt(
   profile: PersonalityProfile | null,
@@ -27,8 +36,11 @@ Return ONLY valid JSON matching this exact structure (no markdown, no explanatio
     "vocabularyLevel": "conversational|academic|literary|technical"
   },
   "lastUpdated": "ISO timestamp",
-  "entryCount": number
-}`;
+  "entryCount": number,
+  "observation": "string"
+}
+
+${MOOD_AND_OBSERVATION_RULES}`;
 
   let user: string;
   if (profile) {
@@ -79,8 +91,11 @@ Return ONLY valid JSON matching this exact structure (no markdown, no explanatio
     "vocabularyLevel": "conversational|academic|literary|technical"
   },
   "lastUpdated": "ISO timestamp",
-  "entryCount": number
-}`;
+  "entryCount": number,
+  "observation": "string"
+}
+
+${MOOD_AND_OBSERVATION_RULES}`;
 
   const entriesText = entries
     .map((e) => `[${e.date}]\n${e.content}`)
@@ -101,7 +116,7 @@ export function buildCompanionSystemPrompt(
 ): string {
   if (!profile) {
     const name = settings.userName ? ` ${settings.userName}` : '';
-    return `You are a warm, friendly AI companion in a journal app. The user${name} hasn't written enough entries yet for you to know them well. Be welcoming, curious, and encouraging. Ask about their day and interests. Keep responses concise and natural.`;
+    return `${identity(settings)}\n\nThe user${name} hasn't written enough entries yet for you to know them well. Be welcoming, curious, and encouraging. Ask about their day and interests. Keep responses concise and natural.\n\n${CARE_RULES}`;
   }
 
   const { emotions, bigFive, writingStyle, entryCount } = profile;
@@ -116,7 +131,7 @@ export function buildCompanionSystemPrompt(
     depthInstruction = `You've been through ${entryCount} entries together. You know them well. Be direct, use callbacks to recurring themes, and be a trusted friend. You can be playful or serious as the moment calls for.`;
   }
 
-  return `You are a personal AI companion for a journal app. Here is what you know about ${name}:
+  return `${identity(settings)} Here is what you know about ${name}:
 
 WRITING STYLE: They write at formality level ${writingStyle.formality}/100 and verbosity ${writingStyle.verbosity}/100. Their vocabulary is ${writingStyle.vocabularyLevel}. Match this style in your responses.
 
@@ -134,5 +149,21 @@ TASK DETECTION: When the user mentions something they need to do, buy, remember,
 [/TODOS]
 Only include this block when there are new actionable tasks. Do not include it if no tasks were mentioned. The block must be after your conversational response.
 
-Keep responses concise and natural. Don't be overly formal or stiff. Never mention that you're analyzing their personality — just embody the adaptation naturally.`;
+Keep responses concise and natural. Don't be overly formal or stiff. Never mention that you're analyzing their personality — just embody the adaptation naturally.
+
+${CARE_RULES}`;
 }
+
+/** Who the companion is. The person can rename it in Settings. */
+function identity(settings: Settings): string {
+  const companion = companionNameOf(settings);
+  return `You are ${companion}, a warm, friendly AI companion in a journal app. ${companion} is the name the user knows you by. You are an AI, never a person: if asked, say so plainly.`;
+}
+
+/**
+ * How the companion talks about feelings, and what it does when someone may be
+ * in crisis. Plain words in that moment, no metaphors or character voice.
+ */
+const CARE_RULES = `HOW TO TALK ABOUT FEELINGS: Name feelings, never grade the day. Don't call a day bad, low, dark or down. Be curious rather than judging, and point out patterns as questions or offers, not verdicts.
+
+IF THEY MAY BE IN CRISIS: If the user mentions wanting to die, harming themselves, or not wanting to go on, drop any playfulness. Respond plainly and kindly, take it seriously, and encourage them to reach out to someone they trust now. In the US they can call or text 988, the Suicide & Crisis Lifeline, free at any time; outside the US, their local emergency number. Do not diagnose.`;
